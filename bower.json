@@ -1,0 +1,23 @@
+{
+  "name": "totp-demo",
+  "version": "0.0.0",
+  "authors": [
+    "Jacob Krall <jacob@jkrall.net>"
+  ],
+  "description": "TOTP 2 factor authentication demo",
+  "keywords": [
+    "totp"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "crypto-js": "~3.1.5",
+    "react": "~0.13.3"
+  }
+}
