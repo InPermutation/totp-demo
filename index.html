@@ -8,47 +8,9 @@
         <meta name="author" content="Jacob Krall" />
 
         <script type="text/javascript" src="bower_components/crypto-js/crypto-js.js"></script>
+        <script type="text/javascript" src="bower_components/react/react.min.js"></script>
+        <script type="text/javascript" src="bower_components/react/JSXTransformer.js"></script>
+        <script type="text/jsx" src="totp.js"></script>
 
     </head>
-    <body>
-    <script type="text/javascript">
-        function print(name, val) {
-            document.write("" + name + " = ");
-            document.write("<tt>" + val + "</tt>");
-            if (arguments.length > 2) {
-                document.write("<em> (" + arguments[2]+")</em>");
-            }
-            document.write("<br />");
-        }
-        var secret = CryptoJS.enc.Utf8.parse("12345678901234567890");
-        print('secret', secret);
-
-        var time = 1111111111;
-        print('time', time);
-        var X = 30;
-        print('X', X);
-        var T = Math.floor(time / X).toString(16);
-        while(T.length < 16) T = "0" + T;
-        T = CryptoJS.enc.Hex.parse(T);
-        print('T', T);
-
-        document.write('HS = <code>HmacSHA1('+secret+', ' +T+")<br/></code>");
-        var HS = CryptoJS.HmacSHA1(T, secret).toString();
-        print('HS', HS);
-
-        var offset = parseInt(HS.substring(HS.length-1),16) & 0xf;
-        print('offset', offset);
-
-        var DBC1 = HS.substr(offset * 2, 8);
-        print('DBC1', DBC1);
-
-        var DBC2 = parseInt(DBC1, 16) & 0x7FFFFFFF;
-        print('DBC2', DBC2.toString(16), 'clear top bit');
-
-        print('Decimal code', DBC2);
-
-        var TOTP = DBC2 % 1000000;
-        print('TOTP', TOTP);
-    </script>
-    </body>
 </html>
