@@ -1,15 +1,54 @@
 var Secret = React.createClass({
     render: function() {
         return (
-            <div>Secret <input type='text' size='20' maxlength='20' /></div>
+            <div id="secret">Secret <input type='text' size='20' maxlength='20' /></div>
         );
     }
 });
 var Time = React.createClass({
+    componentWillMount: function() { this.intervals = []; },
+    componentDidMount: function() {
+        this.intervals.push(setInterval(this.tick, 100));
+    },
+    componentWillUnmount: function() { this.intervals.map(clearInterval); },
+    getInitialState: function() {
+        return {
+            t: this.getT(),
+            current: true,
+        };
+    },
+    tick: function() {
+        if (!this.state.current) return;
+
+        this.setState({ t: this.getT() });
+    },
+    getT: function() {
+        return Math.floor((new Date()).getTime() / 1000);
+    },
+    onRadioChanged: function(e) {
+        this.setState({ current: e.currentTarget.name === 'current' });
+    },
+    onFocus: function(e) {
+        this.setState({ current: false });
+        e.select();
+    },
+    onTimeChanged: function(e) {
+        this.setState({ t: e.target.value })
+    },
     render: function() {
         return (
-            <div>Time <label><input type='radio'/> current time</label><br/>
-                      <label><input type='radio'/> <input type='number' min='0' /></label>
+            <div>Time
+                <div>
+                    <label>
+                        <input type='radio' name='current' checked={this.state.current} onChange={this.onRadioChanged}/>
+                        current time
+                    </label>
+                    <br/>
+                    <label>
+                        <input type='radio' name='specific' checked={!this.state.current} onChange={this.onRadioChanged}/> 
+                        <input type='number' min='0' value={this.state.t} onFocus={this.onFocus} onChange={this.onTimeChanged}/>
+                    </label>
+                </div>
             </div>
             );
     }
@@ -18,7 +57,7 @@ var Time = React.createClass({
 var TimeStep = React.createClass({
     render: function() {
         return (
-            <label>X <input type='number' min='0' /></label>
+            <div><label>X <input type='number' min='0' /></label></div>
         );
     }
 });
@@ -26,7 +65,7 @@ var TimeStep = React.createClass({
 var InitialTime = React.createClass({
     render: function() {
         return (
-            <label>T0 <input type='number' min='0' /></label>
+            <div><label>T0 <input type='number' min='0' /></label></div>
         );
     }
 });
@@ -34,7 +73,7 @@ var InitialTime = React.createClass({
 var T = React.createClass({
     render: function() {
         return (
-            <label>T <input type='number' min='0' /></label>
+            <div><label>T <input type='number' min='0' /></label></div>
         );
     }
 });
@@ -66,28 +105,28 @@ var Hmac = React.createClass({
 var Offset = React.createClass({
     render: function() {
         return (
-            <span>offset NNN</span>
+            <div>offset NNN</div>
         );
     }
 });
 var DBC1 = React.createClass({
     render: function() {
         return (
-            <label>DBC1 <input type='text' size='8' maxlength='8' /></label>
+            <div><label>DBC1 <input type='text' size='8' maxlength='8' /></label></div>
         );
     }
 });
 var DBC2 = React.createClass({
     render: function() {
         return (
-            <label>DBC2 <input type='text' size='8' maxlength='8' /></label>
+            <div><label>DBC2 <input type='text' size='8' maxlength='8' /></label></div>
         );
     }
 });
 var Decimal  = React.createClass({
     render: function() {
         return (
-            <label>DBC2 in decimal <input type='number' min='0' size='10' /></label>
+            <div><label>DBC2 in decimal <input type='number' min='0' size='10' /></label></div>
         );
     }
 });
@@ -101,14 +140,15 @@ var TOTP = React.createClass({
 var Truncate = React.createClass({
     render: function() {
         return (
-            <div>
+            <fieldset>
+                <legend>Truncate</legend>
                 <Hmac />
                 <Offset />
                 <DBC1 />
                 <DBC2 />
                 <Decimal />
                 <TOTP />
-            </div>
+            </fieldset>
         );
     }
 });
